@@ -31,16 +31,26 @@ def get_urlmd5(url):
 
 def get_nodes(url):
     urlmd5 = get_urlmd5(url)
+
     ce = cache.get(urlmd5)
     if ce:
         print(f"从缓存中获取数据: {urlmd5}")
         return ce
-    url = f"{url}&flag=clash"
-    result = requests.get(url, allow_redirects=True).text
-    # 尝试使用 base64 解码
-    proxies = yaml.safe_load(result).get('proxies', [])  # 添加默认值防止key不存在
-    cache.set(urlmd5, proxies, timeout=300)
-    return proxies
+    try:
+        if '?' in url:
+            url = f"{url}&flag=clash"
+
+        result = requests.get(url, allow_redirects=True)
+        # 尝试使用 base64 解码
+        # 对result进行编码, 避免出现乱码
+        result = result.content.decode("utf-8")
+        with open(f"{BASE_DIR}/{urlmd5}.yaml", "w") as w:
+            w.write(result)
+        proxies = yaml.safe_load(result).get('proxies', [])  # 添加默认值防止key不存在
+        cache.set(urlmd5, proxies, timeout=300)
+        return proxies
+    except:
+        return
 
 
 EX = ['剩余', '套餐', '官网', '流量', '群组']
@@ -67,8 +77,12 @@ def index():
 
     _nodes = []
     for i in url:
-        _nodes.extend(get_nodes(i))
+        r = get_nodes(i)
+        if not r:
+            continue
+        _nodes.extend(r)
     # 去重
+    print(len(_nodes))
     nodes = []
     for i in _nodes:
         if not any(_ex in i['name'] for _ex in EX):  # 使用any函数简化代码
@@ -83,19 +97,21 @@ def index():
         try:
             response = reader.country(_ip)
             # 修改: 保留name字段
-            proxy_group = PROXIES.copy()
-            proxy_group['name'] = response.country.iso_code
-            proxy_group['proxies'].append(i['name'])
-            proxies_group.setdefault(response.country.iso_code, proxy_group)[
-                'proxies'].append(i['name'])
+            if not response.country.iso_code:
+                # print(response.country)
+                raise ValueError
+            if not proxies_group.get(response.country.iso_code):
+                proxies_group[response.country.iso_code] = {'name': response.country.iso_code, 'type': 'url-test', 'url': 'http://www.gstatic.com/generate_204',
+                                                            'interval': 300, 'tolerance': 50, 'proxies': []}
+            proxies_group[response.country.iso_code]['proxies'].append(
+                i['name'])
         except:
-            # 修改: 保留name字段
-            proxy_group = PROXIES.copy()
-            proxy_group['name'] = '其他'
-            proxy_group['proxies'].append(i['name'])
-            proxies_group.setdefault('其他', proxy_group)[
-                'proxies'].append(i['name'])
-
+            # print('其他')
+            if not proxies_group.get('其他'):
+                proxies_group['其他'] = {'name': '其他', 'type': 'url-test', 'url': 'http://www.gstatic.com/generate_204',
+                                       'interval': 300, 'tolerance': 50, 'proxies': []}
+            proxies_group['其他']['proxies'].append(i['name'])
+    # print(proxies_group,'---------')
     data['proxies'] = nodes
 
     # 创建预定义的代理组
@@ -116,7 +132,7 @@ def index():
         list(proxies_group.values())
     _node_select = []
     for i in data['proxy-groups']:
-        print(i['name'])
+        # print(i)
         if not any(_ex in i['name'] for _ex in ['漏网之鱼', '全球拦截', '全球直连']):  # 使用any函数简化代码
             _node_select.append(i['name'])
 
@@ -150,4 +166,4 @@ def get_ip_by_dnspython(domain):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=17894)
