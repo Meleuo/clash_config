@@ -141,7 +141,11 @@ def index():
             "proxies": _node_select + [i['name'] for i in data['proxies']]}
     ] + data['proxy-groups']
     with open(f"{BASE_DIR}/rules.yaml", "r") as yaml_file:
-        data['rules'] = yaml.safe_load(yaml_file)
+        data['rules'] = yaml.safe_load(yaml_file)['rules']
+    
+    with open(f"{BASE_DIR}/rule-providers.yaml", "r") as yaml_file:
+        data['rule-providers'] = yaml.safe_load(yaml_file)['rules']
+        
     return yaml.dump(data, allow_unicode=True)
 
 
