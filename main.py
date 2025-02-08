@@ -1,8 +1,6 @@
 import dns.resolver
-import socket
 from geoip2.database import Reader
 import re
-import copy
 import hashlib
 import base64
 import yaml
@@ -18,7 +16,7 @@ app = Flask(__name__)
 
 app.config['CACHE_TYPE'] = 'FileSystemCache'  # 指定缓存类型为文件系统
 app.config['CACHE_DIR'] = '/tmp/clash_conf/'  # 指定缓存目录
-app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # 设置默认缓存超时时间（秒）
+app.config['CACHE_DEFAULT_TIMEOUT'] = 3000  # 设置默认缓存超时时间（秒）
 
 cache = Cache(app)
 
@@ -44,8 +42,8 @@ def get_nodes(url):
         # 尝试使用 base64 解码
         # 对result进行编码, 避免出现乱码
         result = result.content.decode("utf-8")
-        with open(f"{BASE_DIR}/{urlmd5}.yaml", "w") as w:
-            w.write(result)
+        # with open(f"{BASE_DIR}/{urlmd5}.yaml", "w") as w:
+        #     w.write(result)
         proxies = yaml.safe_load(result).get('proxies', [])  # 添加默认值防止key不存在
         cache.set(urlmd5, proxies, timeout=300)
         return proxies
@@ -142,10 +140,10 @@ def index():
     ] + data['proxy-groups']
     with open(f"{BASE_DIR}/rules.yaml", "r") as yaml_file:
         data['rules'] = yaml.safe_load(yaml_file)['rules']
-    
+
     with open(f"{BASE_DIR}/rule-providers.yaml", "r") as yaml_file:
         data['rule-providers'] = yaml.safe_load(yaml_file)['rule-providers']
-        
+
     return yaml.dump(data, allow_unicode=True)
 
 
