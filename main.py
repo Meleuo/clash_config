@@ -144,7 +144,7 @@ def index():
         data['rules'] = yaml.safe_load(yaml_file)['rules']
     
     with open(f"{BASE_DIR}/rule-providers.yaml", "r") as yaml_file:
-        data['rule-providers'] = yaml.safe_load(yaml_file)['rules']
+        data['rule-providers'] = yaml.safe_load(yaml_file)['rule-providers']
         
     return yaml.dump(data, allow_unicode=True)
 
