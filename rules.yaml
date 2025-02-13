@@ -1,5 +1,6 @@
 rules:
   - DOMAIN,*.github.com,🚀 节点选择
+  - DOMAIN,*.github.io,🚀 节点选择
   - DOMAIN,clash.razord.top,DIRECT
   - DOMAIN,yacd.haishan.me,DIRECT
   - RULE-SET,applications,DIRECT
