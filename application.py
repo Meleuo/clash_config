@@ -71,6 +71,8 @@ def get_nodes(url: str) -> Optional[List[Dict]]:
         # 解码响应内容
         import subprocess   
         content = subprocess.check_output(f"curl -SsLk {url}", shell=True).decode("utf-8")
+        content = f'{content}\n'
+        print(content)
         proxies = yaml.safe_load(content).get('proxies', [])
         # 设置缓存
         cache.set(urlmd5, proxies, timeout=config['cache']['node_timeout'])
