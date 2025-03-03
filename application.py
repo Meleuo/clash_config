@@ -62,17 +62,16 @@ def get_nodes(url: str) -> Optional[List[Dict]]:
         if '?' in url:
             url = f"{url}&flag=clash"
         
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        }
+        # headers = {
+        #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        # }
         
-        response = requests.get(url, allow_redirects=True, timeout=100, headers=headers)
-        response.raise_for_status()
-        
+        # response = requests.get(url, allow_redirects=True, timeout=100)
+        # response.raise_for_status()
         # 解码响应内容
-        content = response.content.decode("utf-8")
+        import subprocess   
+        content = subprocess.check_output(f"curl -SsLk {url}", shell=True).decode("utf-8")
         proxies = yaml.safe_load(content).get('proxies', [])
-        
         # 设置缓存
         cache.set(urlmd5, proxies, timeout=config['cache']['node_timeout'])
         return proxies
