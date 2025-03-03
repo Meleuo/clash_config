@@ -124,7 +124,6 @@ def index():
             return jsonify({"error": "Missing url parameter"}), 400
             
         urls = base64.b64decode(url_base64).decode('utf-8').split('\n')
-        print(urls)
         # 初始化数据结构
         data = {**config['clash'], "proxies": [], "proxy-groups": []}
         proxies_group = {}
@@ -132,8 +131,14 @@ def index():
         # 获取并处理节点
         nodes = []
         for url in urls:
-            if url_nodes := get_nodes(url):
+            print(f"Get nodes:  {url}")
+            url_nodes = get_nodes(url)
+            if url_nodes :
                 nodes.extend(url_nodes)
+                print(f"Get nodes:  {url} success")
+            else:
+                print(f"Get nodes:  {url} failed")
+                print(f"Error: {url_nodes}")
                 
         # 节点去重和过滤
         filtered_nodes = [
