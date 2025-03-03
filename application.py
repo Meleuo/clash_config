@@ -62,7 +62,11 @@ def get_nodes(url: str) -> Optional[List[Dict]]:
         if '?' in url:
             url = f"{url}&flag=clash"
         
-        response = requests.get(url, allow_redirects=True, timeout=10)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        }
+        
+        response = requests.get(url, allow_redirects=True, timeout=100, headers=headers)
         response.raise_for_status()
         
         # 解码响应内容
