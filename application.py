@@ -59,8 +59,7 @@ def get_nodes(url: str) -> Optional[List[Dict]]:
         
     try:
         # 添加clash标志
-        if '?' in url:
-            url = f"{url}&flag=clash"
+        url = f"{url}&flag=clash"
         
         # headers = {
         #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -72,7 +71,6 @@ def get_nodes(url: str) -> Optional[List[Dict]]:
         import subprocess   
         content = subprocess.check_output(f"curl -SsLk {url}", shell=True).decode("utf-8")
         content = f'{content}\n'
-        print(content)
         proxies = yaml.safe_load(content).get('proxies', [])
         # 设置缓存
         cache.set(urlmd5, proxies, timeout=config['cache']['node_timeout'])
