@@ -82,6 +82,9 @@ def get_nodes(url: str) -> Optional[List[Dict]]:
     except yaml.YAMLError as e:
         logger.error(f"解析YAML失败: {url}, 错误: {e}")
         return None
+    except Exception as e:
+        logger.error(f"获取节点失败: {url}, 错误: {e}")
+        return None
 
 def get_ip_by_dnspython(domain: str) -> Optional[str]:
     """使用dnspython解析域名获取IP地址"""
@@ -120,9 +123,10 @@ def index():
         # 获取并解码URL参数
         url_base64 = request.args.get('url')
         if not url_base64:
-            return jsonify({"error": "Missing url parameter"}), 400
-            
+            return  ":)"
+        logger.info(f"Get url_base64: {url_base64}")
         urls = base64.b64decode(url_base64).decode('utf-8').split('\n')
+        logger.info(f"Get urls: {urls}")
         # 初始化数据结构
         data = {**config['clash'], "proxies": [], "proxy-groups": []}
         proxies_group = {}
