@@ -56,10 +56,9 @@ def get_nodes(url: str) -> Optional[List[Dict]]:
     if cached_data:
         logger.info(f"从缓存中获取数据: {urlmd5}")
         return cached_data
-        
     try:
         # 添加clash标志
-        url = f"{url}&flag=clash"
+        # url = f"{url}&flag=clash"
         
         # headers = {
         #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -69,7 +68,7 @@ def get_nodes(url: str) -> Optional[List[Dict]]:
         # response.raise_for_status()
         # 解码响应内容
         import subprocess   
-        content = subprocess.check_output(f"curl -SsLk {url}", shell=True).decode("utf-8")
+        content = subprocess.check_output(f"curl -SsLk '{url}'", shell=True).decode("utf-8")
         content = f'{content}\n'
         proxies = yaml.safe_load(content).get('proxies', [])
         # 设置缓存
@@ -134,11 +133,15 @@ def index():
         # 获取并处理节点
         nodes = []
         for url in urls:
+            url = url.strip()
+            if not url:
+                continue
             print(f"Get nodes:  {url}")
             url_nodes = get_nodes(url)
             if url_nodes :
                 nodes.extend(url_nodes)
-                print(f"Get nodes:  {url} success")
+                
+                print(f"Get nodes:  {url} success, {len(url_nodes)} nodes")
             else:
                 print(f"Get nodes:  {url} failed")
                 print(f"Error: {url_nodes}")
