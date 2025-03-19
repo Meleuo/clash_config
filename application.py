@@ -146,7 +146,7 @@ def index():
                 #     node['name'] = f"{url_domain} - {node['name']}"
                 _url_nodes = []
                 for node in url_nodes:
-                    node['name'] = f"{url_domain} - {node['name']}"
+                    node['name'] = f"{url_domain}_{node['name']}"
                     _url_nodes.append(node)
                 nodes.extend(_url_nodes)
                 
