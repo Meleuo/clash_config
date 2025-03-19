@@ -144,6 +144,7 @@ def index():
                 # 把node的name 重写一下, 增加一个url 的二级域名
                 # for node in url_nodes:
                 #     node['name'] = f"{url_domain} - {node['name']}"
+                url_nodes = [{"name": f"{url_domain} - {node['name']}", "server": node['server']} for node in url_nodes]
                 nodes.extend(url_nodes)
                 
                 print(f"Get nodes:  {url} success, {len(url_nodes)} nodes")
