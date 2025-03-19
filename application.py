@@ -136,9 +136,14 @@ def index():
             url = url.strip()
             if not url:
                 continue
-            print(f"Get nodes:  {url}")
+            # 提取出url 的一级域名
+            url_domain = re.match(r'https?://(.*)/', url).group(1)
+            print(f"Get url_domain:  {url_domain}")
             url_nodes = get_nodes(url)
-            if url_nodes :
+            if url_nodes:
+                # 把node的name 重写一下, 增加一个url 的二级域名
+                # for node in url_nodes:
+                #     node['name'] = f"{url_domain} - {node['name']}"
                 nodes.extend(url_nodes)
                 
                 print(f"Get nodes:  {url} success, {len(url_nodes)} nodes")
