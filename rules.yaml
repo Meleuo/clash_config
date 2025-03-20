@@ -2,6 +2,7 @@ rules:
   - DOMAIN,*.github.com,🚀 节点选择
   - DOMAIN,*.github.io,🚀 节点选择
   - DOMAIN,*.claude.ai,🚀 节点选择
+  - DOMAIN,claude.ai,🚀 节点选择
   - DOMAIN,*.lenovo.com,DIRECT
   - DOMAIN,s16.serv00.com,DIRECT
   - DOMAIN,*.mutter.cn,DIRECT
