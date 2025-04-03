@@ -6,6 +6,7 @@ rules:
   - DOMAIN,*.lenovo.com,DIRECT
   - DOMAIN,s16.serv00.com,DIRECT
   - DOMAIN,*.mutter.cn,DIRECT
+  - DOMAIN,*.navicat.com,DIRECT
   - DOMAIN,*.0197011.xyz,DIRECT
   - DOMAIN,clash.razord.top,DIRECT
   - DOMAIN,yacd.haishan.me,DIRECT
